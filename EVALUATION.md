@@ -11,9 +11,7 @@
 1. [Inception Score (IS)](#1-inception-score-is)
 2. [Fréchet Inception Distance (FID)](#2-fréchet-inception-distance-fid)
 3. [Kernel Inception Distance (KID)](#3-kernel-inception-distance-kid)
-4. [Maximum Mean Discrepancy (MMD)](#4-maximum-mean-discrepancy-mmd)
-5. [Precision and Recall for Distributions (PRD)](#5-precision-and-recall-for-distributions-prd)
-6. [Learned Perceptual Image Patch Similarity (LPIPS)](#learned-perceptual-image-patch-similarity-lpips)
+4. [Learned Perceptual Image Patch Similarity (LPIPS)](#learned-perceptual-image-patch-similarity-lpips)
 
 
 ## Inception Score (IS)
@@ -44,26 +42,6 @@
   - Instead of calculating the Fréchet distance, KID calculates the squared Maximum Mean Discrepancy (MMD) between the feature representations.
   - KID uses a polynomial kernel function to compute MMD, which makes it more robust than FID when comparing small datasets.
 - **Output Interpretation**: Lower KID values indicate higher similarity between the two sets. KID has the added advantage of being unbiased for small datasets, while FID can sometimes produce biased results with small sample sizes.
-
-## Maximum Mean Discrepancy (MMD)
-
-- **Description**: Maximum Mean Discrepancy is a general statistical test for comparing two probability distributions, used here to measure similarity between two sets of images.
-- **How it Works**:
-  - MMD compares the feature distributions of the two datasets by calculating the mean difference between the feature embeddings (from an Inception network) using kernel functions (such as Gaussian or polynomial kernels).
-  - MMD is a non-parametric test, meaning it doesn’t assume the distributions are Gaussian like FID does. This flexibility allows MMD to capture more nuanced differences between the datasets.
-- **Output Interpretation**: Lower MMD values indicate that the feature distributions are more similar. Like FID and KID, this means the generated and real images are closer in quality and diversity.
-
-## Precision and Recall for Distributions (PRD)
-
-- **Description**: PRD is a metric pair that provides both precision and recall values to assess the quality (precision) and diversity (recall) of generated images compared to a reference set.
-- **How it Works**:
-  - PRD assesses whether the generated images cover the distribution of real images (recall) and whether they maintain distinct quality (precision).
-  - The metric divides the feature space into bins and calculates the overlap between the real and generated distributions.
-  - Precision measures how well the generated data samples the reference distribution, while recall measures how well the real distribution covers the generated data.
-- **Output Interpretation**: PRD returns two values:
-  - **Precision**: Higher precision indicates that the generated images are of high quality and align well with real images.
-  - **Recall**: Higher recall suggests that the generated set captures a wide diversity similar to the real dataset.
-- **Applications**: PRD is particularly useful when both quality and diversity are essential, such as in generative models where we want generated images to both look realistic and cover a range of styles or classes.
 
 ## Learned Perceptual Image Patch Similarity (LPIPS)
 

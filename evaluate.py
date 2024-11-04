@@ -3,6 +3,7 @@ import torch_fidelity
 import lpips
 import os
 from PIL import Image
+from torchvision import transforms
 
 ORIGINAL_DATASET_PATH = './datasets/original_21_9'
 GENERATED_DATASET_PATH = './datasets/generated_21_9'
@@ -13,7 +14,7 @@ def calculate_metrics():
         input1=ORIGINAL_DATASET_PATH,
         input2=GENERATED_DATASET_PATH,
         cuda=True if torch.cuda.is_available() else False,
-        isc=False, fid=True, kid=False, mmd=False, prd=False, verbose=True
+        isc=True, fid=True, kid=True, verbose=True
     )
 
 
@@ -27,8 +28,8 @@ def calculate_perceptual_similarity():
 
     lpips_scores = []
     for original_img, generated_img in zip(original_dataset, generated_dataset):
-        original_img = Image.open(os.path.join(ORIGINAL_DATASET_PATH, original_img))
-        generated_img = Image.open(os.path.join(GENERATED_DATASET_PATH, generated_img))
+        original_img = transforms.ToTensor()(Image.open(os.path.join(ORIGINAL_DATASET_PATH, original_img)))
+        generated_img = transforms.ToTensor()(Image.open(os.path.join(GENERATED_DATASET_PATH, generated_img)))
 
         if torch.cuda.is_available():
             original_img, generated_img = original_img.cuda(), generated_img.cuda()
@@ -50,10 +51,12 @@ if __name__ == "__main__":
         f.write('Original dataset: %s\n' % ORIGINAL_DATASET_PATH)
         f.write('Generated dataset: %s\n\n' % GENERATED_DATASET_PATH)
 
-        f.write(metrics)
+        f.write('Metrics\n')
+        f.write(str(metrics))
         f.write('\n\n')
 
-        f.write(perceptual_similarity)
+        f.write('Perceptual Similarity\n')
+        f.write(str(perceptual_similarity))
         f.write('\n')
 
 

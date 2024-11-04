@@ -1,5 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
+import os
+import imageio
 
 # image shape
 HEIGHT = 96
@@ -65,12 +67,15 @@ def mirror_16_9_to_21_9(image, original_shape):
 with open(DATA_PATH) as f:
     images = read_all_images(DATA_PATH)
 
-    for image in images:
+    os.makedirs('datasets/original_21_9', exist_ok=True)
+    os.makedirs('datasets/generated_21_9', exist_ok=True)
+
+    for idx, image in enumerate(images):
         original_img_21_9 = crop_image21_9(image)
         original_img_16_9 = crop_image16_9(original_img_21_9)
         generated_img_21_9 = mirror_16_9_to_21_9(original_img_16_9, image.shape)
 
-        plot_image(original_img_21_9)
-        plot_image(generated_img_21_9)
-
+        print('Processing image ', idx)
+        imageio.imwrite(f'datasets/original_21_9/{idx}.png', original_img_21_9)
+        imageio.imwrite(f'datasets/generated_21_9/{idx}.png', generated_img_21_9)
         

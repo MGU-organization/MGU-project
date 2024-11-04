@@ -1,0 +1,13 @@
+EVALUATION METRICS
+
+Original dataset: ./datasets/original_21_9
+Generated dataset: ./datasets/generated_21_9
+
+Metrics
+{'inception_score_mean': 15.726661160014483, 'inception_score_std': 0.389380428841194, 'frechet_inception_distance': 34.14811602769936, 'kernel_inception_distance_mean': 0.026119818687438966, 'kernel_inception_distance_std': 0.0011880054500591323}
+
+Inception Score: 15.726661160014483 ± 0.389380428841194
+Frechet Inception Distance: 34.14811602769936
+Kernel Inception Distance: 0.026119818687438966 ± 0.0011880054500591323
+
+Perceptual Similarity: 0.03517155987499282

@@ -1,0 +1,6 @@
+/data
+/datasets
+/img
+/venv
+
+.DS_Store

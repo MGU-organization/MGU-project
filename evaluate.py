@@ -4,9 +4,14 @@ import lpips
 import os
 from PIL import Image
 from torchvision import transforms
+import numpy as np
+from skimage.metrics import structural_similarity as ssim
 
 ORIGINAL_DATASET_PATH = './datasets/original_21_9'
 GENERATED_DATASET_PATH = './datasets/generated_21_9'
+
+def rmse(x, y):
+    return np.sqrt(np.mean((x - y) ** 2))
 
 
 def calculate_metrics():
@@ -16,6 +21,33 @@ def calculate_metrics():
         cuda=True if torch.cuda.is_available() else False,
         isc=True, fid=True, kid=True, verbose=True
     )
+
+def root_mean_squared_error():
+    original_dataset = os.listdir(ORIGINAL_DATASET_PATH)
+    generated_dataset = os.listdir(GENERATED_DATASET_PATH)
+
+    rmse_results = []
+    for original_img, generated_img in zip(original_dataset, generated_dataset):
+        original_img = np.asarray(Image.open(os.path.join(ORIGINAL_DATASET_PATH, original_img)))
+        generated_img = np.asarray(Image.open(os.path.join(GENERATED_DATASET_PATH, generated_img)))
+
+        rmse_results.append(rmse(generated_img, original_img))
+
+    return sum(rmse_results) / len(rmse_results)
+
+
+def structural_similarity_index():
+    original_dataset = os.listdir(ORIGINAL_DATASET_PATH)
+    generated_dataset = os.listdir(GENERATED_DATASET_PATH)
+
+    ssim_results = []
+    for original_img, generated_img in zip(original_dataset, generated_dataset):
+        original_img = np.asarray(Image.open(os.path.join(ORIGINAL_DATASET_PATH, original_img)))
+        generated_img = np.asarray(Image.open(os.path.join(GENERATED_DATASET_PATH, generated_img)))
+
+        ssim_results.append(ssim(generated_img, original_img, multichannel=True, channel_axis=2))
+
+    return sum(ssim_results) / len(ssim_results)
 
 
 def calculate_perceptual_similarity():
@@ -44,6 +76,8 @@ def calculate_perceptual_similarity():
 if __name__ == "__main__":
     metrics = calculate_metrics()
     perceptual_similarity = calculate_perceptual_similarity()
+    rmse_result = root_mean_squared_error()
+    ssim_result = structural_similarity_index()
 
     with open('metrics.txt', 'w') as f:
         f.write('EVALUATION METRICS\n\n')
@@ -57,6 +91,16 @@ if __name__ == "__main__":
 
         f.write('Perceptual Similarity\n')
         f.write(str(perceptual_similarity))
-        f.write('\n')
+        f.write('\n\n')
+
+        f.write('RMSE\n')
+        f.write(str(rmse_result))
+        f.write('\n\n')
+
+        f.write('SSIM\n')
+        f.write(str(ssim_result))
+        f.write('\n\n')
+
+
 
 
